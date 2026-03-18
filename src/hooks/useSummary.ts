@@ -1,8 +1,11 @@
-import { useContext } from "react"
 import { TransactionsContext } from "../contexts/TransactionsContext"
+import { useContextSelector } from "use-context-selector"
 
 export function useSummary() {
-    const { transactions } = useContext(TransactionsContext)
+    // Essa função permite retornar ao elemento apenas a dependência utilizada e não todo o contexto -> Otimiza renderização
+    const transactions = useContextSelector(TransactionsContext, (context) => {
+        return context.transactions
+    })
 
     // Irei reduzir o array de objeto a isso:
     // { income: x, outcome: y, total: z }
