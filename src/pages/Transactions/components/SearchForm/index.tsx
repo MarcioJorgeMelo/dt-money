@@ -3,8 +3,11 @@ import { SearchFormContainer } from "./styles";
 import { useForm } from "react-hook-form";
 import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
 import { TransactionsContext } from "../../../../contexts/TransactionsContext";
+import { useContextSelector } from "use-context-selector";
+
+// Não vale a pena p/ pequenos componentes, pois na maioria das vezes, comparar HTML é mais rápido que 'deep comparison'
+// Usar 'memo' -> verifica se houve mudanças nos hooks, props ou parents, antes de inicar o processo padrão do react, de recriar o componente p/ compara-lo, após novas mudanças
 
 const searchFormSchema = z.object({
     query: z.string(),
@@ -13,7 +16,9 @@ const searchFormSchema = z.object({
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function SearchForm() {
-    const { fetchTransactions } = useContext(TransactionsContext)
+    const fetchTransactions = useContextSelector(TransactionsContext, (context) => {
+        return context.fetchTransactions
+    })
 
     const {
         register,
